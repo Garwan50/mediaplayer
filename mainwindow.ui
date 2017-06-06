@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>853</width>
+    <height>462</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>200</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: white;
+QPushButton {
+	padding: 10px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: grey;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetNoConstraint</enum>
+      </property>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QPushButton" name="button_import">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">padding: 10px;
+border-style: solid;
+border-width: 1px;
+border-color: grey;</string>
+          </property>
+          <property name="text">
+           <string>Importer fichiers</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_save">
+          <property name="styleSheet">
+           <string notr="true">padding: 10px;
+border-style: solid;
+border-width: 1px;
+border-color: grey;</string>
+          </property>
+          <property name="text">
+           <string>Sauvegarder Playlist</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_load">
+          <property name="styleSheet">
+           <string notr="true">padding: 10px;
+border-style: solid;
+border-width: 1px;
+border-color: grey;</string>
+          </property>
+          <property name="text">
+           <string>Charger Playlist</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_timer">
+          <property name="styleSheet">
+           <string notr="true">padding: 10px;
+border-style: solid;
+border-width: 1px;
+border-color: grey;</string>
+          </property>
+          <property name="text">
+           <string>Activer Timer</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QPushButton" name="button_pause">
+            <property name="styleSheet">
+             <string notr="true">border-style: solid;
+border-width: 1px;
+border-color: grey;
+padding: 5px;</string>
+            </property>
+            <property name="text">
+             <string>Pause</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../Téléchargements/pause.png</normaloff>../Téléchargements/pause.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="button_next">
+            <property name="styleSheet">
+             <string notr="true">border-style: solid;
+border-width: 1px;
+border-color: grey;
+padding: 5px;</string>
+            </property>
+            <property name="text">
+             <string>Suivant</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../Téléchargements/next.png</normaloff>../Téléchargements/next.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="button_play">
+            <property name="styleSheet">
+             <string notr="true">border-style: solid;
+border-width: 1px;
+border-color: grey;
+padding: 5px;</string>
+            </property>
+            <property name="text">
+             <string>Play</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../Téléchargements/play.png</normaloff>../Téléchargements/play.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="button_previous">
+            <property name="styleSheet">
+             <string notr="true">border-style: solid;
+border-width: 1px;
+border-color: grey;
+padding: 5px;</string>
+            </property>
+            <property name="text">
+             <string>Précedent</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../Téléchargements/previous.png</normaloff>../Téléchargements/previous.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QSlider" name="slider_position">
+            <property name="styleSheet">
+             <string notr="true">::handle {
+	padding: 30px;
+}</string>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_duration">
+            <property name="text">
+             <string>TextLabel</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QListWidget" name="list_song"/>
+        </item>
+        <item>
+         <widget class="QSlider" name="slider_volume">
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="repeat_sortby">
+          <item>
+           <widget class="QRadioButton" name="radio_repeat">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>../Téléchargements/Repeat.png</normaloff>../Téléchargements/Repeat.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="combo_sort">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: white;</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>Trier par :</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Aléatoire</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Les moins ecoutés</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>853</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
