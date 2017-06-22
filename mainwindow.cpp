@@ -53,7 +53,7 @@ void MainWindow::Play() {
 
 void MainWindow::PlayOrPause() {
     if(player->state() == QMediaPlayer::PausedState) {
-        player->play();
+        this->Play();
     } else if (player->state() == QMediaPlayer::PlayingState) {
         player->pause();
     }
@@ -91,7 +91,6 @@ void MainWindow::ImportMusic() {
 }
 
 void MainWindow::SetPosition() {
-    player->pause();
     float duration = player->duration(); // ex 1000
     float position = ui->slider_position->value(); // ex 30 sur 100
     float value = (position/100) * duration;
@@ -244,7 +243,10 @@ void MainWindow::SavePlaylist() {
         for(int y = 0; y < path.length(); y++) {
             if(path[y] == ' ') path[y] = '%';
         }
-        out << "\t<track><location>" + path + "</location><title>" + title + "</title></track>\n";
+        QString prefixe;
+        if(path[0] == '/') prefixe = "file://";
+        else prefixe = "file:///";
+        out << "\t<track><location>" + prefixe + path + "</location><title>" + title + "</title></track>\n";
     }
     out << "</tracklist>";
     QMessageBox::information(this, "Succes", "La liste de lecture " + filename + " a été enregistrée avec succès.");
@@ -267,12 +269,14 @@ void MainWindow::LoadPlaylist() {
         if(match.hasMatch()) {
             QString captured = match.captured(1);
             if (!captured.contains("file:///")) {
-                captured = "file:///" + captured;
+                if(captured[0] == '/') captured = "file://" + captured;
+                else captured = "file:///" + captured;
             }
-            for(int y = 0; y < captured.length(); y++) {
+            /*for(int y = 0; y < captured.length(); y++) {
                 if(captured[y] == '%') captured[y] = ' ';
-            }
+            }*/
             PlaylistAdd(QMediaContent(captured));
+            qDebug() << QMediaContent(captured).canonicalUrl().toString();
         }
     }
     filename = filename.section("/", -1);
