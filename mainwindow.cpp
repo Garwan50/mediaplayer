@@ -23,7 +23,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->button_next, SIGNAL(clicked(bool)), this, SLOT(NextMusic()));
     connect(ui->button_previous, SIGNAL(clicked(bool)), this, SLOT(PreviousMusic()));
     connect(ui->button_import, SIGNAL(clicked(bool)), this, SLOT(ImportMusic()));
-    connect(ui->slider_position, SIGNAL(sliderReleased()), this, SLOT(SetPosition()));
+
+    connect(ui->slider_position, SIGNAL(sliderMoved(int)), this, SLOT(SetPosition()));
+    connect(ui->slider_position, SIGNAL(sliderReleased()), this, SLOT(SetPositionEnd()));
+
     connect(ui->slider_position, SIGNAL(actionTriggered(int)), this, SLOT(ActionSliderPosition(int)));
     connect(ui->radio_repeat, SIGNAL(toggled(bool)), this, SLOT(SetRepeat()));
     connect(ui->combo_sort, SIGNAL(activated(int)), this, SLOT(SortList(int)));
@@ -91,25 +94,35 @@ void MainWindow::ImportMusic() {
 }
 
 void MainWindow::SetPosition() {
+    disconnect(player, SIGNAL(positionChanged(qint64)), this, SLOT(SetTime()));
     float duration = player->duration(); // ex 1000
     float position = ui->slider_position->value(); // ex 30 sur 100
     float value = (position/100) * duration;
     player->setPosition(value); // = 300
 }
+void MainWindow::SetPositionEnd() {
+    connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(SetTime()));
+}
 
 void MainWindow::ActionSliderPosition(int action) {
-    player->pause();
-    if(action == QAbstractSlider::SliderPageStepAdd || action == QAbstractSlider::SliderPageStepSub) {
+    // ui->slider_position->value() renvoi la valeur du curseur AVANT le page up.
+    if(action == QAbstractSlider::SliderPageStepAdd) {
         float duration = player->duration(); // ex 1000
-        float position = ui->slider_position->value(); // ex 30
-        float value = (position/100) * duration; // ex 30/100 * 1000
-        player->setPosition(value); // = 300
+        float position = ui->slider_position->value()+10; // ex 30+10
+        float value = (position/100) * duration; // ex 40/100 * 1000
+        player->setPosition(value); // = 400
+    } else if( action == QAbstractSlider::SliderPageStepSub) {
+        float duration = player->duration(); // ex 1000
+        float position = ui->slider_position->value()-10; // ex 30-10
+        float value = (position/100) * duration; // ex 20/100 * 1000
+        player->setPosition(value); // = 400
     }
-    player->play();
 }
 void MainWindow::ActionSliderVolume(int action) {
-    if(action == QAbstractSlider::SliderPageStepAdd || action == QAbstractSlider::SliderPageStepSub) {
-        player->setVolume(ui->slider_volume->value());
+    if(action == QAbstractSlider::SliderPageStepAdd) {
+        player->setVolume(ui->slider_volume->value()+10 > 100 ? 100 : ui->slider_volume->value()+10);
+    } else if(action == QAbstractSlider::SliderPageStepSub) {
+        player->setVolume(ui->slider_volume->value()-10 < 0 ? 0 : ui->slider_volume->value()-10);
     }
 }
 
@@ -119,6 +132,10 @@ void MainWindow::SetRepeat() {
 }
 
 void MainWindow::SetTimeLeft() {
+    if(player->currentMedia() == NULL) {
+        ui->label_duration->setText("00:00");
+        return;
+    }
     long int ms = player->duration()-player->position();
     QTime time = QTime(0, 0, 0);
     time = time.addMSecs(ms);
@@ -126,10 +143,15 @@ void MainWindow::SetTimeLeft() {
 }
 
 void MainWindow::SortList(int number) {
+    if(playlist->isEmpty()) return;
     if(number == 1) { // sort random
-        //on sauvegarde la musique en cours
-        QMediaContent media = playlist->currentMedia();
-        int position = (int)player->position();
+        //on sauvegarde la musique en cours si il y'en a une
+        QMediaContent media;
+        int position;
+        if(player->currentMedia() != NULL) {
+            media = playlist->currentMedia();
+            position = (int)player->position();
+        }
         // generation d'une liste de nombre aléatoire
         srand(QDateTime::currentMSecsSinceEpoch());
         QList<int> randoms;
@@ -145,8 +167,10 @@ void MainWindow::SortList(int number) {
             randoms[index] = RAND_MAX;
         }
         // Reinitialisation de la playlist
-        selected->setBackground(QColor(0, 0, 0, 0));
-        selected = NULL;
+        if(selected != NULL) {
+            selected->setBackground(QColor(0, 0, 0, 0));
+            selected = NULL;
+        }
         playlist->clear();
         ui->list_song->clear();
         musicPath->clear();
@@ -154,17 +178,22 @@ void MainWindow::SortList(int number) {
         bool found = false;
         for(int i = 0; i < newTab1.count(); i++) {
             PlaylistAdd(QUrl::fromLocalFile(newTab1[i]));
-            if(playlist->media(i) == media && !found) {
-                index = i;
-                found = true;
-            }
         }
-        playlist->setCurrentIndex(index);
-        if(position > 0) {
-            selected = ui->list_song->item(index);
-            selected->setBackground(QColor(14,193,251,100));
-            player->setPosition(position);
-            player->play();
+        //Selection de l'ancienne musique
+        if(player->currentMedia() != NULL) {
+            for(int i = 0; i < playlist->mediaCount(); i++) {
+                if(playlist->media(i) == media && !found) {
+                    index = i;
+                    found = true;
+                }
+            }
+            playlist->setCurrentIndex(index);
+            if(position > 0) {
+                selected = ui->list_song->item(index);
+                selected->setBackground(QColor(14,193,251,100));
+                player->setPosition(position);
+                player->play();
+            }
         }
     }
 }
@@ -181,6 +210,7 @@ void MainWindow::PreviousMusic() {
 }
 
 void MainWindow::NextMusic() {
+    if(playlist->isEmpty()) return;
     int index = playlist->currentIndex()+1;
     if(playlist->media(playlist->currentIndex()+1).isNull()) index = 0;
 
@@ -272,9 +302,6 @@ void MainWindow::LoadPlaylist() {
                 if(captured[0] == '/') captured = "file://" + captured;
                 else captured = "file:///" + captured;
             }
-            /*for(int y = 0; y < captured.length(); y++) {
-                if(captured[y] == '%') captured[y] = ' ';
-            }*/
             PlaylistAdd(QMediaContent(captured));
             qDebug() << QMediaContent(captured).canonicalUrl().toString();
         }

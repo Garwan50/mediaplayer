@@ -33,6 +33,7 @@ public slots:
     void SetTime();
     void ImportMusic();
     void SetPosition();
+    void SetPositionEnd();
     void SetRepeat();
     void SetTimeLeft();
     void SortList(int number);

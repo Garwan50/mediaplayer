@@ -132,7 +132,7 @@ padding: 5px;</string>
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../Téléchargements/pause.png</normaloff>../Téléchargements/pause.png</iconset>
+              <normaloff>pause.png</normaloff>pause.png</iconset>
             </property>
            </widget>
           </item>
@@ -149,7 +149,7 @@ padding: 5px;</string>
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../Téléchargements/next.png</normaloff>../Téléchargements/next.png</iconset>
+              <normaloff>next.png</normaloff>next.png</iconset>
             </property>
            </widget>
           </item>
@@ -166,7 +166,7 @@ padding: 5px;</string>
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../Téléchargements/play.png</normaloff>../Téléchargements/play.png</iconset>
+              <normaloff>play.png</normaloff>play.png</iconset>
             </property>
            </widget>
           </item>
@@ -183,7 +183,7 @@ padding: 5px;</string>
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../Téléchargements/previous.png</normaloff>../Téléchargements/previous.png</iconset>
+              <normaloff>previous.png</normaloff>previous.png</iconset>
             </property>
            </widget>
           </item>
@@ -241,7 +241,7 @@ padding: 5px;</string>
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>../Téléchargements/Repeat.png</normaloff>../Téléchargements/Repeat.png</iconset>
+              <normaloff>Repeat.png</normaloff>Repeat.png</iconset>
             </property>
            </widget>
           </item>
@@ -291,7 +291,7 @@ padding: 5px;</string>
      <x>0</x>
      <y>0</y>
      <width>853</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
