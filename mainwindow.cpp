@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     selected = NULL;
     timer = new QTimer(this);
     pause = new QShortcut(QKeySequence("SPACE"), this);
+    del = new QShortcut(QKeySequence::Delete, this);
 
     connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(SetTime()));
     connect(player, SIGNAL(positionChanged(qint64)), this, SLOT(SetTimeLeft()));
@@ -35,7 +36,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->button_load, SIGNAL(clicked(bool)), this, SLOT(LoadPlaylist()));
     connect(ui->button_timer, SIGNAL(clicked(bool)), this, SLOT(SetTimer()));
     connect(timer, SIGNAL(timeout()), this, SLOT(EndTimer()));
+
     connect(pause, SIGNAL(activated()), this, SLOT(PlayOrPause())); //
+    connect(del, SIGNAL(activated()), this, SLOT(RemoveFromList()));
 
     timer->setSingleShot(true);
 
@@ -46,6 +49,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::RemoveFromList() {
+    if(ui->list_song->currentItem() == NULL) return;
+    QListWidgetItem *current = ui->list_song->currentItem();
+    int currentRow = ui->list_song->currentRow();
+    qDebug() << currentRow;
+    ui->list_song->takeItem(currentRow);
+    playlist->removeMedia(currentRow);
+    musicPath->removeAt(currentRow);
+    qDebug() << current->text();
 }
 
 void MainWindow::Play() {
@@ -270,9 +284,6 @@ void MainWindow::SavePlaylist() {
         }
         title.remove(pos, 5);
         QString path = musicPath->value(i);
-        for(int y = 0; y < path.length(); y++) {
-            if(path[y] == ' ') path[y] = '%';
-        }
         QString prefixe;
         if(path[0] == '/') prefixe = "file://";
         else prefixe = "file:///";
@@ -291,6 +302,7 @@ void MainWindow::LoadPlaylist() {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) return;
     QTextStream read(&file);
+    read.setCodec("UTF-8");
     QRegularExpressionMatch match;
     QRegularExpression regexp("<location>(.*)</location>", QRegularExpression::CaseInsensitiveOption);
     while(!read.atEnd()) {

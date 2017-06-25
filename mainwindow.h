@@ -49,6 +49,7 @@ public slots:
     void EndTimer();
     void PlayOrPause();
     void Play();
+    void RemoveFromList();
 
 private:
     Ui::MainWindow *ui;
@@ -58,6 +59,7 @@ private:
     QListWidgetItem *selected;
     QTimer *timer;
     QShortcut *pause;
+    QShortcut *del;
 };
 
 #endif // MAINWINDOW_H
