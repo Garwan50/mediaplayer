@@ -44,6 +44,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     player->setPlaylist(playlist);
     player->setVolume(50);
+
+    //ui->list_song->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->list_song->setDragEnabled(true);
+    ui->list_song->setAcceptDrops(true);
+    ui->list_song->setDropIndicatorShown(true);
+    ui->list_song->setDefaultDropAction(Qt::MoveAction);
+
+    connect(ui->list_song->model(), SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(Reorganize(QModelIndex,int,int,QModelIndex,int)));
 }
 
 MainWindow::~MainWindow()
@@ -51,15 +59,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::Reorganize(QModelIndex,int int1,int,QModelIndex,int int2) { //int1 = origine, int2 = destination
+    if(int2 >= playlist->mediaCount()) int2--;
+    playlist->moveMedia(int1, int2);
+    musicPath->move(int1, int2);
+
+}
+
 void MainWindow::RemoveFromList() {
     if(ui->list_song->currentItem() == NULL) return;
-    QListWidgetItem *current = ui->list_song->currentItem();
+    int med;
+    qDebug() << playlist->currentIndex();
+    if(playlist->currentIndex() >= 0) med = playlist->currentIndex();
     int currentRow = ui->list_song->currentRow();
-    qDebug() << currentRow;
     ui->list_song->takeItem(currentRow);
     playlist->removeMedia(currentRow);
     musicPath->removeAt(currentRow);
-    qDebug() << current->text();
+    if (currentRow < med) playlist->setCurrentIndex(med-1);
 }
 
 void MainWindow::Play() {
@@ -249,7 +265,8 @@ void MainWindow::ChangeMusic(QListWidgetItem* item) {
 }
 
 void MainWindow::ChangeMedia(QMediaContent media) {
-    if(player->state() == QMediaPlayer::StoppedState) return;
+    qDebug() << playlist->errorString();
+    //if(player->state() == QMediaPlayer::StoppedState) return;
     if(selected != NULL && !media.isNull()) {
         selected->setBackground(QColor(0, 0, 0, 0));
         selected = ui->list_song->item(playlist->currentIndex());

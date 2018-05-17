@@ -50,6 +50,7 @@ public slots:
     void PlayOrPause();
     void Play();
     void RemoveFromList();
+    void Reorganize(QModelIndex,int,int,QModelIndex,int);
 
 private:
     Ui::MainWindow *ui;
